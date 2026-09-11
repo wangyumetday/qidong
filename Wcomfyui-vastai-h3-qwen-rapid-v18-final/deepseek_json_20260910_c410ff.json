@@ -1,0 +1,145 @@
+{
+  "last_node_id": 6,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [100, 100],
+      "size": [300, 300],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "QwenImageEditTextEncode",
+      "pos": [450, 100],
+      "size": [400, 200],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 1 },
+        { "name": "prompt", "type": "STRING", "widget": { "name": "prompt" }, "link": null }
+      ],
+      "outputs": [
+        { "name": "CONDITIONING", "type": "CONDITIONING", "links": [2] }
+      ],
+      "properties": { "Node name for S&R": "QwenImageEditTextEncode" },
+      "widgets_values": ["把镜头视角切换为从背后俯视，保持人物的穿着、发型和姿势完全不变"]
+    },
+    {
+      "id": 3,
+      "type": "UNETLoader",
+      "pos": [450, 350],
+      "size": [350, 100],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        { "name": "MODEL", "type": "MODEL", "links": [3] }
+      ],
+      "properties": { "Node name for S&R": "UNETLoader" },
+      "widgets_values": ["qwen_image_edit_2511_fp8mixed.safetensors", "default"]
+    },
+    {
+      "id": 4,
+      "type": "CLIPLoader",
+      "pos": [850, 350],
+      "size": [350, 100],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        { "name": "CLIP", "type": "CLIP", "links": [4] }
+      ],
+      "properties": { "Node name for S&R": "CLIPLoader" },
+      "widgets_values": ["qwen_2.5_vl_7b_fp8_scaled.safetensors", "qwen_image"]
+    },
+    {
+      "id": 5,
+      "type": "VAELoader",
+      "pos": [1250, 350],
+      "size": [350, 100],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        { "name": "VAE", "type": "VAE", "links": [5] }
+      ],
+      "properties": { "Node name for S&R": "VAELoader" },
+      "widgets_values": ["qwen_image_vae.safetensors"]
+    },
+    {
+      "id": 6,
+      "type": "KSampler",
+      "pos": [900, 100],
+      "size": [300, 200],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        { "name": "model", "type": "MODEL", "link": 3 },
+        { "name": "positive", "type": "CONDITIONING", "link": 2 },
+        { "name": "negative", "type": "CONDITIONING", "link": null },
+        { "name": "latent_image", "type": "LATENT", "link": null }
+      ],
+      "outputs": [
+        { "name": "LATENT", "type": "LATENT", "links": [6] }
+      ],
+      "properties": { "Node name for S&R": "KSampler" },
+      "widgets_values": [0, "randomize", 20, 4.0, "euler", "normal", 1.0]
+    },
+    {
+      "id": 7,
+      "type": "VAEDecode",
+      "pos": [1250, 100],
+      "size": [200, 60],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        { "name": "samples", "type": "LATENT", "link": 6 },
+        { "name": "vae", "type": "VAE", "link": 5 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [7] }
+      ],
+      "properties": { "Node name for S&R": "VAEDecode" }
+    },
+    {
+      "id": 8,
+      "type": "SaveImage",
+      "pos": [1250, 250],
+      "size": [300, 300],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 7 }
+      ],
+      "properties": { "Node name for S&R": "SaveImage" },
+      "widgets_values": ["Qwen_Edit_Output"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 0, 6, 1, "CONDITIONING"],
+    [3, 3, 0, 6, 0, "MODEL"],
+    [4, 4, 0, 2, 2, "CLIP"],
+    [5, 5, 0, 7, 1, "VAE"],
+    [6, 6, 0, 7, 0, "LATENT"],
+    [7, 7, 0, 8, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

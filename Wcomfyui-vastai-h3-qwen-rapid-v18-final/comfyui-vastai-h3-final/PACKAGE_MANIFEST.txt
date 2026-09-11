@@ -1,0 +1,36 @@
+Adapted final deployment package
+
+README_FIRST.md
+VERSION_LOCK.md
+MODEL_SOURCES.md
+FINAL_AUDIT.md
+SOURCES.md
+USER_REQUIREMENTS.txt
+PACKAGE_MANIFEST.txt
+comfyui-vastai-h3-guide.html
+deploy_comfyui_vastai_h3.sh
+verify_environment.sh
+verify_models_and_workflows.py
+patch_h3_workflow.py
+qwen_rapid_requirements.txt
+
+custom_nodes/qwen_rapid_aio_v18/__init__.py
+custom_nodes/qwen_rapid_aio_v18/worker_server.py
+custom_nodes/qwen_rapid_aio_v18/README.md
+
+workflows/qwen_rapid_aio_v18_diffusers.json
+workflows/README.md
+
+_shared/fonts/*
+_shared/js/*
+assets/charts.js
+
+Generated at deployment:
+- /workspace/ComfyUI/user/default/workflows/qwen_rapid_aio_v18_diffusers.json
+- /workspace/ComfyUI/user/default/workflows/video_minimax_h3_i2v_official.json
+- /workspace/ComfyUI/user/default/workflows/video_minimax_h3_i2v_web_loras.json
+- /workspace/qwen_rapid_venv/
+- /workspace/qwen_rapid_models/qwen_image_edit_2511/
+- /workspace/qwen_rapid_models/qwen_rapid_aio_v18/
+- /workspace/qwen_rapid_runtime/worker.log
+- /workspace/run_comfyui.sh
